@@ -3,11 +3,11 @@
 
 namespace Asymmetrik\Kyruus\Http;
 
-use Asymmetrik\Kyruus\Exception\OAuthException;
-use Asymmetrik\Kyruus\Exception\RequestException;
 use \Exception;
 use GuzzleHttp\Client;
 use Spatie\Regex\Regex;
+use Asymmetrik\Kyruus\Exception\OAuthException;
+use Asymmetrik\Kyruus\Exception\RequestException;
 use League\OAuth2\Client\Provider\GenericProvider;
 
 class RequestCoordinator
@@ -22,6 +22,9 @@ class RequestCoordinator
      */
     private $endpoint;
 
+    /**
+     * @var \League\OAuth2\Client\Token\AccessToken
+     */
     private $_token;
 
     /**
@@ -32,10 +35,17 @@ class RequestCoordinator
         return 'https://'.Regex::replace('/^(https?:)?\/\//i', '', $url);
     }
 
+    /**
+     * @return \League\OAuth2\Client\Token\AccessToken
+     */
     protected function getToken(){
         return $this->oauth->getAccessToken('client_credentials');
     }
 
+    /**
+     * @param $request
+     * @return string
+     */
     protected function generateApiUrl($request){
         return 'https://'.$this->root_url.'/pm/v8/'.$this->endpoint.'/'.ltrim('/',$request);
     }
@@ -68,6 +78,14 @@ class RequestCoordinator
         $this->oauth = $this->generateProvider($username, $password, $oauthRoot);
     }
 
+    /**
+     * @param $method
+     * @param $url
+     * @param null $data
+     * @return mixed|\Psr\Http\Message\ResponseInterface
+     * @throws OAuthException
+     * @throws RequestException
+     */
     protected function _wrappedRequest($method, $url, $data=null){
         if(!$this->_token) {
             try {
@@ -92,23 +110,46 @@ class RequestCoordinator
         }
     }
 
+    /**
+     * @param $url
+     * @return mixed|\Psr\Http\Message\ResponseInterface
+     */
     public function get($url){
-        $this->_wrappedRequest('GET', $this->generateApiUrl($url));
+        return $this->_wrappedRequest('GET', $this->generateApiUrl($url));
     }
 
+    /**
+     * @param $url
+     * @param $data
+     * @return mixed|\Psr\Http\Message\ResponseInterface
+     */
     public function post($url, $data){
-        $this->_wrappedRequest('POST', $this->generateApiUrl($url), $data);
+        return $this->_wrappedRequest('POST', $this->generateApiUrl($url), $data);
     }
 
+    /**
+     * @param $url
+     * @param $data
+     * @return mixed|\Psr\Http\Message\ResponseInterface
+     */
     public function put($url, $data){
-        $this->_wrappedRequest('PUT', $this->generateApiUrl($url), $data);
+        return $this->_wrappedRequest('PUT', $this->generateApiUrl($url), $data);
     }
 
+    /**
+     * @param $url
+     * @param $data
+     * @return mixed|\Psr\Http\Message\ResponseInterface
+     */
     public function patch($url, $data){
-        $this->_wrappedRequest('PATCH', $this->generateApiUrl($url), $data);
+        return $this->_wrappedRequest('PATCH', $this->generateApiUrl($url), $data);
     }
 
+    /**
+     * @param $url
+     * @return mixed|\Psr\Http\Message\ResponseInterface
+     */
     public function delete($url){
-        $this->_wrappedRequest('DELETE', $this->generateApiUrl($url));
+        return $this->_wrappedRequest('DELETE', $this->generateApiUrl($url));
     }
 }
