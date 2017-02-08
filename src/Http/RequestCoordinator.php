@@ -10,7 +10,7 @@ use Asymmetrik\Kyruus\Exception\OAuthException;
 use Asymmetrik\Kyruus\Exception\RequestException;
 use League\OAuth2\Client\Provider\GenericProvider;
 
-class RequestCoordinator
+class RequestCoordinator implements Coordinator
 {
     /**
      * @var GenericProvider
@@ -54,7 +54,6 @@ class RequestCoordinator
      * @param $user Username
      * @param $password Password
      * @param $root OAuth Root
-     * @param $endpoint Organization source
      * @return GenericProvider
      */
     protected function generateProvider($user, $password, $root){
