@@ -20,7 +20,7 @@ class RequestCoordinator
     /**
      * @var string
      */
-    private $endpoint;
+    private $endpoint = '';
 
     /**
      * @var \League\OAuth2\Client\Token\AccessToken
@@ -47,7 +47,7 @@ class RequestCoordinator
      * @return string
      */
     protected function generateApiUrl($request){
-        return 'https://'.$this->root_url.'/pm/v8/'.$this->endpoint.'/'.ltrim('/',$request);
+        return 'https://'.$this->root_url.$this->endpoint.'/'.ltrim('/',$request);
     }
 
     /**
@@ -57,14 +57,12 @@ class RequestCoordinator
      * @param $endpoint Organization source
      * @return GenericProvider
      */
-    protected function generateProvider($user, $password, $root, $endpoint){
+    protected function generateProvider($user, $password, $root){
         return new GenericProvider([
             'cliendId' => $user,
             'clientSecret' => $password,
             'urlAuthorize' => $root.'/oauth2/token',
         ]);
-
-        $this->endpoint = $endpoint;
     }
 
     /**
@@ -108,6 +106,10 @@ class RequestCoordinator
         } catch(Exception $e){
             throw new RequestException($e->getMessage(), $e->getCode(), $e);
         }
+    }
+
+    public function setEndpoint($endpoint){
+        $this->endpoint = $endpoint;
     }
 
     /**

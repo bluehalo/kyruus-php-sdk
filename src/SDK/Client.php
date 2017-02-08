@@ -11,11 +11,14 @@ class Client {
      */
     private $client;
 
-
+    /**
+     * Kyruus API version
+     */
     const VERSION = 'v8';
 
     public function __construct($oauthRoot, $user_name, $password) {
         $this->client = new RequestCoordinator($oauthRoot, $user_name, $password);
+        $this->client->setEndpoint('/pm/'.self::VERSION.'/');
     }
 
     public function search($url) {
