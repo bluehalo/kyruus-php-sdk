@@ -92,24 +92,47 @@ class Client {
     }
 
     /**
+     * Run query, string creates a search whereas a function passed just calls your implementation.
+     * @param $closure Callable|string
+     * @return mixed
+     * @throws RequestException
+     */
+    protected function _wrappedQuery($closure){
+        if(is_callable($closure))
+            $response = $closure();
+        else
+            $response = $this->search($this->providers()->facet('network_affiliations.name')->compile());
+
+        if ($response->getStatusCode() != 200)
+            throw new RequestException($response->getReasonPhrase(), $response->getStatusCode());
+
+        return json_decode($response->getBody());
+    }
+
+    /**
      * Get locations and network affiliations
      * @return array<ArrayCollection>
      * @throws RequestException
      */
     public function getLocations() {
-        $affiliations = $this->search($this->providers()->facet('network_affiliations.name')->compile());
-        $locations = $this->search($this->providers()->facet('locations.name')->compile());
-
-        if ($affiliations->getStatusCode() != 200)
-            throw new RequestException($affiliations->getReasonPhrase(), $affiliations->getStatusCode());
-
-        if ($locations->getStatusCode() != 200)
-            throw new RequestException($locations->getReasonPhrase(), $locations->getStatusCode());
-
         return [
-            'affiliations' => new ArrayCollection(json_decode($affiliations->getBody())->facets),
-            'locations' => new ArrayCollection(json_decode($locations->getBody())->facets)
+            'affiliations' => $this->affiliations(),
+            'locations' => $this->locations()
         ];
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function affiliations(){
+        return new ArrayCollection($this->_wrappedQuery($this->providers()->facet('network_affiliations.name')->compile())->facets);
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function locations(){
+        return new ArrayCollection($this->_wrappedQuery($this->providers()->facet('locations.name')->compile())->facets);
     }
 
 }
