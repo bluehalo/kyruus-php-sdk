@@ -2,6 +2,7 @@
 
 namespace Asymmetrik\Kyruus\Test;
 
+use PHPUnit\Framework\TestCase;
 use Asymmetrik\Kyruus\SDK\Client;
 use ArgumentCountError;
 
