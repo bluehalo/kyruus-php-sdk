@@ -23,6 +23,11 @@ class RequestCoordinator implements Coordinator
     private $endpoint = '';
 
     /**
+     * @var string
+     */
+    private $organization = '';
+
+    /**
      * @var \League\OAuth2\Client\Token\AccessToken
      */
     private $_token;
@@ -47,7 +52,7 @@ class RequestCoordinator implements Coordinator
      * @return string
      */
     protected function generateApiUrl($request){
-        return 'https://'.$this->root_url.$this->endpoint.'/'.ltrim('/',$request);
+        return 'https://'.$this->root_url.$this->endpoint.'/'.$this->organization.'/'.ltrim('/',$request);
     }
 
     /**
@@ -70,9 +75,10 @@ class RequestCoordinator implements Coordinator
      * @param $username
      * @param $password
      */
-    public function __construct($oauthRoot, $username, $password)
+    public function __construct($oauthRoot, $username, $password, $organization)
     {
         $this->oauth = $this->generateProvider($username, $password, $oauthRoot);
+        $this->organization = $organization;
     }
 
     /**
