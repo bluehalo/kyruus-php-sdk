@@ -4,16 +4,14 @@ namespace Asymmetrik\Kyruus\Test;
 
 use PHPUnit\Framework\TestCase;
 use Asymmetrik\Kyruus\SDK\Client;
-use ArgumentCountError;
 
 class SDKClientTest extends TestCase {
 
     /**
      * @test
-     * @expectedException ArgumentCountError
      */
-    public function emptyCreationTest(){
-        new Client();
+    public function itShouldNotConnectOnCreationTest(){
+        $this->assertInstanceOf(Client::class, new Client('root', 'user', 'pass', 'org'));
     }
 }
 
