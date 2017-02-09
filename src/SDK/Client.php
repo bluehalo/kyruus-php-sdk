@@ -98,7 +98,7 @@ class Client {
      */
     public function getLocations() {
         $affiliations = $this->search($this->providers()->facet('network_affiliations.name')->compile());
-        $locations = $this->search($this->facet('locations.name')->compile());
+        $locations = $this->search($this->providers()->facet('locations.name')->compile());
 
         if ($affiliations->getStatusCode() != 200)
             throw new RequestException($affiliations->getReasonPhrase(), $affiliations->getStatusCode());
