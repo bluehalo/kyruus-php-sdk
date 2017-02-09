@@ -19,25 +19,60 @@ class Client {
      */
     const VERSION = 'v8';
 
-    public function __construct($oauthRoot, $user_name, $password) {
+    /**
+     * Client constructor.
+     * @param $oauthRoot
+     * @param $user_name
+     * @param $password
+     * @param $organization
+     */
+    public function __construct($oauthRoot, $user_name, $password, $organization) {
         $this->client = new RequestCoordinator($oauthRoot, $user_name, $password);
         $this->client->setEndpoint('/pm/'.self::VERSION.'/');
+        $this->client->setOrganization($organization);
     }
 
+    /**
+     * @param $url
+     * @return mixed|\Psr\Http\Message\ResponseInterface
+     */
     public function search($url) {
         return $this->client->get($url);
     }
 
+    /**
+     * Providers query
+     * @return $this
+     */
     public function providers(){
         $this->query[] = 'providers';
         return $this;
     }
 
+    /**
+     * Results per page
+     * @param $amt
+     * @return $this
+     */
     public function perPage($amt){
         $this->query[] = 'per_page='.$amt;
         return $this;
     }
 
+    /**
+     * Add facet parameter
+     * @param $facet
+     * @return $this
+     */
+    public function facet($facet){
+        $this->query[] = 'facet='.$facet;
+        return $this;
+    }
+
+    /**
+     * Compile query
+     * @return mixed|string
+     */
     public function compile(){
         $query = '';
         foreach($this->query as $idx => $part){
@@ -52,24 +87,29 @@ class Client {
                     $query .= '&'.$part;
             }
         }
-
+        $this->query = [];
         return $query;
     }
 
+    /**
+     * Get locations and network affiliations
+     * @return array<ArrayCollection>
+     * @throws RequestException
+     */
     public function getLocations() {
-        $response = $this->search($this->providers()->perPage(1)->compile());
+        $affiliations = $this->search($this->providers()->facet('network_affiliations.name')->compile());
+        $locations = $this->search($this->facet('locations.name')->compile());
 
-        if ( $response->getStatusCode() != 200)
-            throw new RequestException($response->getReasonPhrase(), $response->getStatusCode());
+        if ($affiliations->getStatusCode() != 200)
+            throw new RequestException($affiliations->getReasonPhrase(), $affiliations->getStatusCode());
 
+        if ($locations->getStatusCode() != 200)
+            throw new RequestException($locations->getReasonPhrase(), $locations->getStatusCode());
 
-        $facets = new ArrayCollection(json_decode($response->getBody())->facets);
-
-        $locations = $facets->filter(function($val){
-            return $val->field === 'locations.name';
-        });
-
-        return $locations;
+        return [
+            'affiliations' => new ArrayCollection(json_decode($affiliations->getBody())->facets),
+            'locations' => new ArrayCollection(json_decode($locations->getBody())->facets)
+        ];
     }
 
 }

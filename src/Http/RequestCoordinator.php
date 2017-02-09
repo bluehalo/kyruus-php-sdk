@@ -25,6 +25,11 @@ class RequestCoordinator implements Coordinator
     /**
      * @var string
      */
+    private $root = '';
+
+    /**
+     * @var string
+     */
     private $organization = '';
 
     /**
@@ -37,7 +42,7 @@ class RequestCoordinator implements Coordinator
      * @return string
      */
     protected function forceHttps($url){
-        return 'https://'.Regex::replace('/^(https?:)?\/\//i', '', $url);
+        return Regex::replace('/^(https?:)?\/\//i', 'https://', $url)->result();
     }
 
     /**
@@ -52,7 +57,7 @@ class RequestCoordinator implements Coordinator
      * @return string
      */
     protected function generateApiUrl($request){
-        return 'https://'.$this->root_url.$this->endpoint.'/'.$this->organization.'/'.ltrim('/',$request);
+        return $this->forceHttps($this->root.$this->endpoint.$this->organization.'/'.ltrim($request, '/'));
     }
 
     /**
@@ -63,10 +68,16 @@ class RequestCoordinator implements Coordinator
      */
     protected function generateProvider($user, $password, $root){
         return new GenericProvider([
-            'cliendId' => $user,
+            'clientId' => $user,
             'clientSecret' => $password,
             'urlAuthorize' => $root.'/oauth2/token',
+            'urlAccessToken' => $root.'/oauth2/token',
+            'urlResourceOwnerDetails' => ''
         ]);
+    }
+
+    public function setOrganization($organization){
+        $this->organization = $organization;
     }
 
     /**
@@ -75,10 +86,10 @@ class RequestCoordinator implements Coordinator
      * @param $username
      * @param $password
      */
-    public function __construct($oauthRoot, $username, $password, $organization)
+    public function __construct($oauthRoot, $username, $password)
     {
         $this->oauth = $this->generateProvider($username, $password, $oauthRoot);
-        $this->organization = $organization;
+        $this->root = $oauthRoot;
     }
 
     /**
@@ -98,16 +109,18 @@ class RequestCoordinator implements Coordinator
             }
         }
 
-        $headers = [
+        $payload = [
             'json' => $data,
-            'Authorization' => 'Bearer '.$this->_token
+            'headers' => [
+                'Authorization' => 'Bearer '.$this->_token->getToken()
+            ]
         ];
 
-        if(is_null($data))
-            unset($headers['json']);
+        foreach($payload as $key => $header)
+            if(is_null($header)) unset($payload[$key]);
 
         try {
-            return (new Client())->request($method, $this->generateApiUrl($url), $headers);
+            return (new Client())->request($method, $url, $payload);
         } catch(Exception $e){
             throw new RequestException($e->getMessage(), $e->getCode(), $e);
         }
