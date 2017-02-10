@@ -22,7 +22,7 @@ class Query
      * @return $this
      */
     public function perPage($amt){
-        $this->query[] = 'per_page='.$amt;
+        $this->_query[] = 'per_page='.$amt;
         return $this;
     }
 
