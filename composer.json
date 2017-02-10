@@ -1,5 +1,5 @@
 {
-  "name": "kyruus-sdk-php",
+  "name": "asymmetrik/kyruus-sdk-php",
   "description": "Kyruus API wrapping in PHP",
   "type": "library",
   "license": "proprietary",
