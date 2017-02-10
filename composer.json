@@ -1,6 +1,6 @@
 {
   "name": "kyruus-sdk-php",
-  "description": "Kyruus api wrapping in PHP",
+  "description": "Kyruus API wrapping in PHP",
   "type": "library",
   "license": "proprietary",
   "authors": [
