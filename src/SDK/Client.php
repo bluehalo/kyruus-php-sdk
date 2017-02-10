@@ -59,7 +59,7 @@ class Client {
         if(is_callable($closure))
             $response = $closure();
         else
-            $response = $this->search($this->providers()->facet('network_affiliations.name')->compile());
+            $response = $this->search($closure);
 
         if ($response->getStatusCode() >= 300)
             throw new RequestException($response->getReasonPhrase(), $response->getStatusCode());
