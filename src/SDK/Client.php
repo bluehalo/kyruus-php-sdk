@@ -48,7 +48,7 @@ class Client {
      * @return $this
      */
     public function providers(){
-        $this->query = new Query();
+        $this->query = new QueryBuilder();
         return $this;
     }
 

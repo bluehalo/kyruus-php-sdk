@@ -4,7 +4,7 @@
 namespace Asymmetrik\Kyruus\SDK;
 
 
-class Query
+class QueryBuilder
 {
     /**
      * @var array
@@ -27,7 +27,7 @@ class Query
      * @param $amt int|string Number of results per page, recommended <=50
      * @return Query
      */
-    public function perPage($amt){
+    public function per_page($amt){
         return $this->parameter('per_page', $amt);
     }
 
