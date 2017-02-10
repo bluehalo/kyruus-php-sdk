@@ -76,6 +76,9 @@ class RequestCoordinator implements Coordinator
         ]);
     }
 
+    /**
+     * @param $organization
+     */
     public function setOrganization($organization){
         $this->organization = $organization;
     }

@@ -2,7 +2,7 @@
 
 namespace Asymmetrik\Kyruus\SDK;
 
-use Asymmetrik\Kyruus\Http\RequestCoordinator;
+use Asymmetrik\Kyruus\Http\Coordinator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Asymmetrik\Kyruus\Exception\RequestException;
 
@@ -24,13 +24,11 @@ class Client {
 
     /**
      * Client constructor.
-     * @param $oauthRoot
-     * @param $user_name
-     * @param $password
+     * @param Coordinator $coordinator
      * @param $organization
      */
-    public function __construct($oauthRoot, $user_name, $password, $organization) {
-        $this->client = new RequestCoordinator($oauthRoot, $user_name, $password);
+    public function __construct(Coordinator $coordinator, $organization) {
+        $this->client = $coordinator;
         $this->client->setEndpoint('/pm/'.self::VERSION.'/');
         $this->client->setOrganization($organization);
     }
@@ -48,8 +46,7 @@ class Client {
      * @return $this
      */
     public function providers(){
-        $this->query = new QueryBuilder();
-        return $this;
+        return (new QueryBuilder())->providers();
     }
 
     /**
@@ -64,7 +61,7 @@ class Client {
         else
             $response = $this->search($this->providers()->facet('network_affiliations.name')->compile());
 
-        if ($response->getStatusCode() != 200)
+        if ($response->getStatusCode() >= 300)
             throw new RequestException($response->getReasonPhrase(), $response->getStatusCode());
 
         return json_decode($response->getBody());

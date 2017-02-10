@@ -13,6 +13,12 @@ interface Coordinator
     public function __construct($oauthRoot, $username, $password);
 
     /**
+     * @param $organization
+     * @return mixed
+     */
+    public function setOrganization($organization);
+
+    /**
      * @param $endpoint
      * @return mixed
      */
