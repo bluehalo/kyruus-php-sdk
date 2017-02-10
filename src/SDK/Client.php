@@ -12,7 +12,10 @@ class Client {
      */
     private $client;
 
-    private $query = [];
+    /**
+     * @var Query
+     */
+    private $query = null;
 
     /**
      * Kyruus API version
@@ -45,50 +48,8 @@ class Client {
      * @return $this
      */
     public function providers(){
-        $this->query[] = 'providers';
+        $this->query = new Query();
         return $this;
-    }
-
-    /**
-     * Results per page
-     * @param $amt
-     * @return $this
-     */
-    public function perPage($amt){
-        $this->query[] = 'per_page='.$amt;
-        return $this;
-    }
-
-    /**
-     * Add facet parameter
-     * @param $facet
-     * @return $this
-     */
-    public function facet($facet){
-        $this->query[] = 'facet='.$facet;
-        return $this;
-    }
-
-    /**
-     * Compile query
-     * @return mixed|string
-     */
-    public function compile(){
-        $query = '';
-        foreach($this->query as $idx => $part){
-            switch($idx){
-                case 0:
-                    $query = $part;
-                    break;
-                case 1:
-                    $query .= '?'.$part;
-                    break;
-                default:
-                    $query .= '&'.$part;
-            }
-        }
-        $this->query = [];
-        return $query;
     }
 
     /**
