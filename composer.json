@@ -1,29 +1,31 @@
 {
-    "name": "asymmetrik/kyruus-sdk-php",
-    "description": "Kyruus api wrapping in PHP",
-    "type": "library",
-    "license": "proprietary",
-    "authors": [
-        {
-            "name": "Asymmetrik",
-            "email": "apollo-dev@asymmetrik.com"
-        }
-    ],
-    "require": {
-        "guzzlehttp/guzzle": "^6.2",
-        "league/oauth2-client": "^1.4"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^5.7"
-    },
-    "autoload": {
-        "psr-4": {
-            "Asymmetrik\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Asymmetrik\\Test\\": "src/tests/"
-        }
+  "name": "kyruus-sdk-php",
+  "description": "Kyruus API wrapping in PHP",
+  "type": "library",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Asymmetrik",
+      "email": "apollo-dev@asymmetrik.com"
     }
+  ],
+  "require": {
+    "guzzlehttp/guzzle": "^6.2",
+    "league/oauth2-client": "^1.4",
+    "spatie/regex": "^1.1",
+    "doctrine/collections": "^1.4"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^6.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Asymmetrik\\Kyruus\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Asymmetrik\\Kyruus\\Test\\": "tests/"
+    }
+  }
 }
