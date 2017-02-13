@@ -3,6 +3,8 @@
 
 namespace Asymmetrik\Kyruus\SDK;
 
+use Asymmetrik\Kyruus\Exception\RequestException;
+use Asymmetrik\Kyruus\SDK\Client;
 
 class QueryBuilder
 {
@@ -10,9 +12,22 @@ class QueryBuilder
      * @var array
      */
     protected $_query;
+    protected $_client;
 
-    public function __construct(){
+    public function __construct(Client $client = null){
+        $this->_client = $client;
         $this->_query = [];
+    }
+
+    /**
+     * @throws RequestException
+     * @return mixed
+     */
+    public function get(){
+        if(is_null($this->_client))
+            throw new RequestException('No client initialized for query', 1);
+
+        return $this->_client->runQuery($this->compile());
     }
 
     /**

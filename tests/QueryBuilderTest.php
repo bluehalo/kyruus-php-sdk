@@ -2,6 +2,7 @@
 
 namespace Asymmetrik\Kyruus\Test;
 
+use Asymmetrik\Kyruus\Exception\RequestException;
 use PHPUnit\Framework\TestCase;
 use Asymmetrik\Kyruus\SDK\QueryBuilder;
 
@@ -181,6 +182,15 @@ class QueryBuilderTest extends TestCase {
         $this->assertRegExp('/availability_format=1/', $compiled);
     }
 
+    /**
+     * @test
+     * @expectedException Asymmetrik\Kyruus\Exception\RequestException
+     */
+    public function itShouldBreakIfNoClientGiven(){
+        $builder = new QueryBuilder();
 
+        $builder->providers();
+        $builder->get();
+    }
 }
 

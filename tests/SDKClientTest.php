@@ -144,6 +144,22 @@ class SDKClientTest extends TestCase {
 
         $this->assertNotNull($client->affiliations());
     }
+
+    /**
+     * @test
+     */
+    public function itShouldRunQuery(){
+        $coordinator = new TestCoord('root', 'user', 'pass');
+        $client = new Client($coordinator, 'org');
+
+        $data = [];
+        $coordinator->responses[] = new Response($data, random_int(200, 299));
+
+        $this->assertNotNull($client->providers()->get());
+
+        $this->assertEquals('get', end($coordinator->events)[0]);
+        $this->assertEquals('providers', end($coordinator->events)[1][0]);
+    }
 }
 
 class Response{

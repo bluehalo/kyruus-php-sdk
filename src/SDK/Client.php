@@ -43,10 +43,10 @@ class Client {
 
     /**
      * Providers query
-     * @return $this
+     * @return QueryBuilder
      */
     public function providers(){
-        return (new QueryBuilder())->providers();
+        return (new QueryBuilder($this))->providers();
     }
 
     /**
@@ -65,6 +65,14 @@ class Client {
             throw new RequestException($response->getReasonPhrase(), $response->getStatusCode());
 
         return json_decode($response->getBody());
+    }
+
+    /**
+     * @param $query Callable|string
+     * @return mixed
+     */
+    public function runQuery($query){
+       return $this->_wrappedQuery($query);
     }
 
     /**
