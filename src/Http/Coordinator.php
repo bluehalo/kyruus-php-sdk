@@ -14,7 +14,6 @@ interface Coordinator
 
     /**
      * @param $organization
-     * @return mixed
      */
     public function setOrganization($organization);
 

@@ -46,7 +46,15 @@ class Client {
      * @return QueryBuilder
      */
     public function providers(){
-        return (new QueryBuilder($this))->providers();
+        return $this->builder()->providers();
+    }
+
+    /**
+     * Get direct builder instance
+     * @return QueryBuilder
+     */
+    public function builder(){
+        return (new QueryBuilder($this));
     }
 
     /**

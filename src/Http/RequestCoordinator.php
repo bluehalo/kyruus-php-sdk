@@ -38,6 +38,18 @@ class RequestCoordinator implements Coordinator
     private $_token;
 
     /**
+     * RequestCoordinator constructor.
+     * @param $oauthRoot
+     * @param $username
+     * @param $password
+     */
+    public function __construct($oauthRoot, $username, $password)
+    {
+        $this->oauth = $this->generateProvider($username, $password, $oauthRoot);
+        $this->root = $oauthRoot;
+    }
+
+    /**
      * @param $url
      * @return string
      */
@@ -81,18 +93,6 @@ class RequestCoordinator implements Coordinator
      */
     public function setOrganization($organization){
         $this->organization = $organization;
-    }
-
-    /**
-     * RequestCoordinator constructor.
-     * @param $oauthRoot
-     * @param $username
-     * @param $password
-     */
-    public function __construct($oauthRoot, $username, $password)
-    {
-        $this->oauth = $this->generateProvider($username, $password, $oauthRoot);
-        $this->root = $oauthRoot;
     }
 
     /**
