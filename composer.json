@@ -2,11 +2,15 @@
   "name": "asymmetrik/kyruus-sdk-php",
   "description": "Kyruus API wrapping in PHP",
   "type": "library",
-  "license": "proprietary",
+  "license": "MIT",
   "authors": [
     {
       "name": "Asymmetrik",
-      "email": "apollo-dev@asymmetrik.com"
+      "email": "apollo@asymmetrik.com"
+    },
+    {
+      "name": "Christopher Sidell",
+      "email": "csidell@asymmetrik.com"
     }
   ],
   "require": {
